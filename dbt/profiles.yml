@@ -1,0 +1,7 @@
+taxi_weather:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "E:\\TaskChallenge\\SchwarzDigits\\nyc_taxi_weather\\data\\warehouse.duckdb"
+      threads: 4

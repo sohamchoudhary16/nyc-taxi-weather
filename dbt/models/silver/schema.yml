@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stg_weather
+    columns:
+      - name: observed_hour_utc
+        description: Join key. Must be unique or the trip join fans out.
+        tests: [unique, not_null]
+      - name: temperature_c
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: -40
+              max_value: 55
+
+  - name: stg_trips
+    columns:
+      - name: pickup_utc
+        tests:
+          - not_null:
+              config: {where: "is_valid"}
+      - name: duration_seconds
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 86400
+              config: {where: "is_valid"}
