@@ -14,5 +14,5 @@ jobs:
       # dbt models are compiled against DuckDB with a synthetic fixture so CI
       # never depends on an external download or a cloud credential.
       - run: PYTHONPATH=src python -m taxi.fixtures
-      - run: cd dbt && dbt build --target ci
+      - run: cd dbt && dbt deps && dbt build --target ci
         env: {DBT_PROFILES_DIR: "."}
