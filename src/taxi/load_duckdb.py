@@ -7,7 +7,6 @@ import logging
 import sys
 
 import duckdb
-import pandas as pd
 
 from taxi import config
 from taxi.timestamps import add_normalised
@@ -30,7 +29,9 @@ def main() -> int:
     log.info("bronze.trips: %s rows", con.sql("SELECT count(*) FROM bronze.trips").fetchone()[0])
 
     zones = str(config.RAW_DIR / "reference" / "taxi_zone_lookup.csv")
-    con.execute(f"CREATE OR REPLACE TABLE bronze.taxi_zones AS SELECT * FROM read_csv_auto('{zones}')")
+    con.execute(
+        f"CREATE OR REPLACE TABLE bronze.taxi_zones AS SELECT * FROM read_csv_auto('{zones}')"
+    )
 
     weather_glob = str(config.RAW_DIR / "weather" / "*.parquet")
     wx = con.sql(f"SELECT * FROM read_parquet('{weather_glob}')").df()

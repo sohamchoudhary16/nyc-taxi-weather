@@ -16,7 +16,6 @@ from pathlib import Path
 import duckdb
 import matplotlib
 import matplotlib.pyplot as plt
-import pandas as pd
 
 matplotlib.use("Agg")  # Headless backend, no window display
 
@@ -64,7 +63,9 @@ def demand_by_hour_dow(con):
         FROM fct_trips GROUP BY 1,2 ORDER BY 1,2
     """).df()
 
-    heatmap_data = df.pivot_table(values="trips", index="pickup_hour_of_day", columns="pickup_day_of_week")
+    heatmap_data = df.pivot_table(
+        values="trips", index="pickup_hour_of_day", columns="pickup_day_of_week"
+    )
 
     fig, ax = plt.subplots(figsize=(12, 8))
     im = ax.imshow(heatmap_data, cmap="YlOrRd", aspect="auto")
@@ -155,7 +156,7 @@ def print_headline(con):
         "\n"
         "\n>> RECOMMENDATION: Reposition vehicles toward transit hubs during"
         "\n   wet hours. Average speed also drops in rain, so each taxi"
-        "\n   completes fewer trips per hour — the supply gap is larger"
+        "\n   completes fewer trips per hour, the supply gap is larger"
         "\n   than the demand lift alone suggests."
         "\n"
         "\n>> CAVEAT: January only, correlational not causal. A full year"
