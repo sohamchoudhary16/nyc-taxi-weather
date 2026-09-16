@@ -3,5 +3,9 @@ taxi_weather:
   outputs:
     dev:
       type: duckdb
-      path: "E:\\TaskChallenge\\SchwarzDigits\\nyc_taxi_weather\\data\\warehouse.duckdb"
+      path: "../data/warehouse.duckdb"
+      threads: 4
+    ci:
+      type: duckdb
+      path: "../data/warehouse.duckdb"
       threads: 4
