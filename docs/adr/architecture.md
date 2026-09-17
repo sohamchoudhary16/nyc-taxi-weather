@@ -84,26 +84,26 @@ flowchart LR
 
 ## 4. Layer-by-layer design
 
-### 4.1 Edge — the in-car unit
+### 4.1 Edge: the in-car unit
 
 Each of 11,000 vehicles carries an onboard unit that:
 
 - **Buffers locally** when connectivity is lost (tunnels, garages, dead zones).
   Events are persisted to local flash with a monotonic sequence number.
-- **Transmits via MQTT over TLS** with X.509 client certificates — one cert per
+- **Transmits via MQTT over TLS** with X.509 client certificates, one cert per
   device, rotated via the IoT platform. MQTT is chosen over HTTP because it
   handles intermittent connectivity natively (QoS 1 for trip events, QoS 0 for
   telemetry).
 - **Separates topics** by criticality: `vehicles/{id}/trips` (must-not-lose,
   QoS 1) vs `vehicles/{id}/telemetry` (lossy, QoS 0, sampled). This is a cost
-  decision — ingesting 190M raw telemetry events/day is expensive, and most
+  decision, ingesting 190M raw telemetry events/day is expensive, and most
   analytics work on 30-second or 1-minute aggregates.
 - **Receives commands** via device shadow/twin: repositioning hints, tariff
   updates, geofence changes. The unit applies them locally and acknowledges.
   If the cloud is unreachable, the unit falls back to its last-known
   configuration.
 
-### 4.2 Ingest — IoT Core / IoT Hub
+### 4.2 Ingest: IoT Core / IoT Hub
 
 Why a managed IoT platform rather than a bare Kafka topic:
 

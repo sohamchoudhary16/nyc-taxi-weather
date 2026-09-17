@@ -17,18 +17,18 @@ a reproducible query in `src/taxi/explore_dq.py`.
 
 Of 2,964,624 trip rows, **924 (0.03%) are quarantined** as invalid (negative
 duration, out-of-range timestamps, implausible distance). An additional ~10%
-carry soft flags — null passengers (5.79%), zero-distance fares (1.91%),
-refunds (1.26%) — that are **kept for downstream use** with named boolean
+carry soft flags: null passengers (5.79%), zero-distance fares (1.91%),
+refunds (1.26%): that are **kept for downstream use** with named boolean
 columns so analysts can filter by choice, not by accident.
 
-The largest anomaly — a **25.69% fare reconciliation gap** — was investigated
+The largest anomaly: a **25.69% fare reconciliation gap** was investigated
 and traced to a known TLC inconsistency between surcharge columns and
 `total_amount`, not a pipeline bug. See [details below](#investigated-fare-reconciliation-gap-2569).
 
 ## Findings
 
 Rows are **flagged and quarantined, never silently dropped.** Negative fares
-are legitimate refunds — dropping them loses revenue that cannot later be
+are legitimate refunds and dropping them loses revenue that cannot later be
 reconciled. Each quarantined row carries a `failure_reason` so it can be
 counted, investigated, and replayed if a rule is corrected.
 
