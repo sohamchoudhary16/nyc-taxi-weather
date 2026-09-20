@@ -15,9 +15,9 @@ from pathlib import Path
 
 import duckdb
 import matplotlib
-import matplotlib.pyplot as plt
 
-matplotlib.use("Agg")  # Headless backend, no window display
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 from taxi import config
 

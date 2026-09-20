@@ -28,7 +28,7 @@ select
     w.is_snowing,
     w.wind_speed_kmh,
 
-    extract(hour  from t.pickup_local) as pickup_hour_of_day,
+    {{ extract_hour('t.pickup_local') }}  as pickup_hour_of_day,
     {{ extract_dow('t.pickup_local') }} as pickup_day_of_week,
     cast(t.pickup_local as date)       as pickup_date_local
 

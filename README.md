@@ -44,8 +44,8 @@ The contract is declared in exactly two places:
 | `dbt/macros/cross_engine.sql` | SQL macros (`local_to_utc` / `utc_to_local`) |
 
 DST is handled explicitly: spring-forward gaps → quarantined, fall-back
-ambiguity → resolved to first occurrence, flagged. 13 unit tests cover both
-transitions.
+ambiguity → resolved to first occurrence, flagged. 16 unit tests cover both
+transitions and edge cases.
 
 ## Data quality
 

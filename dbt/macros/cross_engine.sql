@@ -36,6 +36,14 @@
   {%- endif -%}
 {% endmacro %}
 
+{% macro extract_hour(ts) %}
+  {%- if target.type == 'duckdb' -%}
+    extract(hour from {{ ts }})
+  {%- else -%}
+    hour({{ ts }})
+  {%- endif -%}
+{% endmacro %}
+
 {% macro extract_dow(ts) %}
   {%- if target.type == 'duckdb' -%}
     extract(dow from {{ ts }})

@@ -24,7 +24,8 @@ def main() -> int:
     trips_glob = str(config.RAW_DIR / "trips" / "*.parquet")
     con.execute(
         f"CREATE OR REPLACE TABLE bronze.trips AS "
-        f"SELECT *, '{{}}' AS _ingested_from FROM read_parquet('{trips_glob}', union_by_name=true)"
+        f"SELECT *, '{trips_glob}' AS _ingested_from "
+        f"FROM read_parquet('{trips_glob}', union_by_name=true)"
     )
     log.info("bronze.trips: %s rows", con.sql("SELECT count(*) FROM bronze.trips").fetchone()[0])
 
