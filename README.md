@@ -14,7 +14,7 @@ shift every record by 4–5 hours if joined naively.
 ## Run it
 
 ```bash
-conda create -n env_task_1 python=3.11 -y && conda activate env_task_1
+conda create -n nyc-taxi python=3.11 -y && conda activate nyc-taxi
 pip install -r requirements.txt
 cd dbt && dbt deps && cd ..
 make all
