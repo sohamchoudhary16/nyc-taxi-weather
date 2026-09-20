@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: bronze
+    description: >
+      Raw landings. Append-only, byte-faithful to the publisher. Never edited --
+      if a transform is wrong we rebuild silver, we do not re-download.
+    schema: bronze
+    tables:
+      - name: trips
+        description: NYC TLC yellow-taxi trip records. Naive America/New_York wall-clock time.
+      - name: weather
+        description: Open-Meteo ERA5 hourly reanalysis for NYC. UTC.
+      - name: taxi_zones
+        description: TLC zone -> borough/service-zone lookup.

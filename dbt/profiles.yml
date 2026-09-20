@@ -1,0 +1,11 @@
+taxi_weather:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "../data/warehouse.duckdb"
+      threads: 4
+    ci:
+      type: duckdb
+      path: "../data/warehouse.duckdb"
+      threads: 4

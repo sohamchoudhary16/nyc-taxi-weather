@@ -1,0 +1,21 @@
+# cp profiles.yml.example ~/.dbt/profiles.yml   (or set DBT_PROFILES_DIR=.)
+#
+# Same models, two engines. Local DuckDB is the guaranteed path; Databricks
+# proves the code is portable. Nothing in models/ is engine-specific except
+# the macros in macros/cross_engine.sql.
+taxi_weather:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "../data/warehouse.duckdb"
+      threads: 4
+
+    databricks:
+      type: databricks
+      catalog: workspace           # Free Edition default catalog
+      schema: taxi_weather
+      host: "{{ env_var('DATABRICKS_HOST') }}"
+      http_path: "{{ env_var('DATABRICKS_HTTP_PATH') }}"
+      token: "{{ env_var('DATABRICKS_TOKEN') }}"
+      threads: 4
