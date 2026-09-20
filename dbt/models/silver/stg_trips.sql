@@ -31,15 +31,16 @@ timed as (
 flagged as (
     select
         *,
-        date_diff('second', pickup_utc, dropoff_utc) as duration_seconds,
+        {{ date_diff_seconds('pickup_utc', 'dropoff_utc') }} as duration_seconds,
 
         -- Each rule is a named boolean so DQ reporting is a simple pivot.
         pickup_utc  is null                                       as dq_pickup_unparseable,
         dropoff_utc is null                                       as dq_dropoff_unparseable,
         dropoff_utc <= pickup_utc                                 as dq_non_positive_duration,
-        date_diff('second', pickup_utc, dropoff_utc) > 86400     as dq_duration_exceeds_24h,
-        pickup_utc < timestamptz '{{ var("min_valid_ts") }} 00:00:00+00'
-          or pickup_utc >= timestamptz '{{ var("max_valid_ts") }} 00:00:00+00'
+        {{ date_diff_seconds('pickup_utc', 'dropoff_utc') }} > 86400
+                                                                  as dq_duration_exceeds_24h,
+        pickup_utc < {{ to_timestamptz(var("min_valid_ts")) }}
+          or pickup_utc >= {{ to_timestamptz(var("max_valid_ts")) }}
                                                                   as dq_pickup_out_of_range,
         trip_distance_miles <= 0 and fare_amount > 0              as dq_zero_distance_paid,
         trip_distance_miles > 500                                 as dq_implausible_distance,

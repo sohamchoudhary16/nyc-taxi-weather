@@ -9,7 +9,15 @@ sources:
     tables:
       - name: trips
         description: NYC TLC yellow-taxi trip records. Naive America/New_York wall-clock time.
+        loaded_at_field: tpep_pickup_datetime
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
       - name: weather
         description: Open-Meteo ERA5 hourly reanalysis for NYC. UTC.
+        loaded_at_field: observed_at_utc
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
       - name: taxi_zones
         description: TLC zone -> borough/service-zone lookup.

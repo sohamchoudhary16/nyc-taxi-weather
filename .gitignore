@@ -3,9 +3,11 @@ data/*.duckdb
 dbt/target/
 dbt/dbt_packages/
 dbt/logs/
+dbt/profiles.yml
+dbt/.user.yml
 ~/.dbt/
 .venv/
 __pycache__/
 *.pyc
+.pytest_cache/
 .env
-docs/figures/*.png

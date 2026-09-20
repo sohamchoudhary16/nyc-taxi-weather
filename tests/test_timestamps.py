@@ -82,3 +82,53 @@ def test_add_normalised_is_non_destructive():
 )
 def test_mixed_input_formats_land_on_the_same_instant(raw):
     assert _norm([raw]).utc.iloc[0] == pd.Timestamp("2024-01-15 14:00:00", tz="UTC")
+
+
+def test_empty_series_returns_empty_results():
+    r = ts.normalise(pd.Series([], dtype="object"), NY)
+    assert len(r.utc) == 0
+    assert len(r.local) == 0
+    assert len(r.is_valid) == 0
+    assert len(r.reason) == 0
+
+
+def test_all_null_series():
+    r = _norm([None, None, None])
+    assert list(r.reason) == [ts.NULL_INPUT, ts.NULL_INPUT, ts.NULL_INPUT]
+    assert not r.is_valid.any()
+    assert r.utc.isna().all()
+
+
+def test_boundary_at_min_ts_is_valid():
+    r = ts.normalise(
+        pd.Series(["2009-01-01 00:00:00"]),
+        "UTC",
+        min_ts=pd.Timestamp("2009-01-01", tz="UTC"),
+        max_ts=pd.Timestamp("2030-01-01", tz="UTC"),
+    )
+    assert r.reason.iloc[0] == ts.OK
+    assert bool(r.is_valid.iloc[0])
+
+
+def test_boundary_at_max_ts_is_quarantined():
+    r = ts.normalise(
+        pd.Series(["2030-01-01 00:00:00"]),
+        "UTC",
+        min_ts=pd.Timestamp("2009-01-01", tz="UTC"),
+        max_ts=pd.Timestamp("2030-01-01", tz="UTC"),
+    )
+    assert r.reason.iloc[0] == ts.OUT_OF_RANGE
+    assert not bool(r.is_valid.iloc[0])
+
+
+def test_custom_min_max_narrows_window():
+    r = ts.normalise(
+        pd.Series(["2024-01-15 12:00:00", "2024-03-01 12:00:00"]),
+        "UTC",
+        min_ts=pd.Timestamp("2024-01-01", tz="UTC"),
+        max_ts=pd.Timestamp("2024-02-01", tz="UTC"),
+    )
+    assert r.reason.iloc[0] == ts.OK
+    assert bool(r.is_valid.iloc[0])
+    assert r.reason.iloc[1] == ts.OUT_OF_RANGE
+    assert not bool(r.is_valid.iloc[1])

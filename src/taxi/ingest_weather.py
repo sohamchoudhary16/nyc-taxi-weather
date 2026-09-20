@@ -61,7 +61,9 @@ def main(argv: list[str] | None = None) -> int:
         month = month.strip()
         df = fetch(*month_bounds(month))
         dest = out_dir / f"weather_{month}.parquet"
-        df.to_parquet(dest, index=False)
+        tmp = dest.with_suffix(dest.suffix + ".part")
+        df.to_parquet(tmp, index=False)
+        tmp.replace(dest)
         log.info("wrote %s rows -> %s", len(df), dest.name)
     return 0
 

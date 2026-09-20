@@ -12,7 +12,7 @@ with observed as (
         pickup_hour_of_day,
         pickup_day_of_week,
         max(precipitation_band) as precipitation_band,
-        bool_or(is_wet_hour)    as is_wet_hour,
+        {{ bool_or_agg('is_wet_hour') }}    as is_wet_hour,
         avg(temperature_c)      as temperature_c,
         count(*)                as trips,
         sum(total_amount)       as revenue,
@@ -29,7 +29,7 @@ baseline as (
         pickup_zone,
         pickup_day_of_week,
         pickup_hour_of_day,
-        avg(trips) filter (where not is_wet_hour) as dry_baseline_trips
+        {{ safe_filter('avg', 'trips', 'not is_wet_hour') }} as dry_baseline_trips
     from observed
     group by 1, 2, 3
 )

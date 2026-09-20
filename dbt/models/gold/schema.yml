@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: fct_trips
+    description: >
+      Valid trips joined with weather and zone lookups. Each row is one
+      trip that passed all hard DQ rules, enriched with the weather
+      conditions at pickup hour and human-readable zone names.
+    columns:
+      - name: pickup_utc
+        description: Pickup timestamp in UTC.
+        tests: [not_null]
+      - name: pickup_local
+        description: Pickup timestamp as naive America/New_York wall-clock time.
+        tests: [not_null]
+      - name: pickup_hour_utc
+        description: Hour-truncated pickup in UTC, used as the weather join key.
+        tests: [not_null]
+      - name: duration_seconds
+        description: Trip duration in seconds (dropoff minus pickup).
+        tests: [not_null]
+      - name: total_amount
+        description: Total fare charged to the passenger.
+        tests: [not_null]
+      - name: pickup_date_local
+        description: Pickup date in New York local time.
+        tests: [not_null]
+
+  - name: agg_zone_hour_demand
+    description: >
+      Observed demand per zone-hour with a dry-weather baseline for the
+      same zone and day-of-week/hour-of-day, so the weather effect is
+      isolated from time-of-week patterns.
+    columns:
+      - name: pickup_zone
+        description: Taxi zone name at the pickup location.
+        tests: [not_null]
+      - name: pickup_date_local
+        description: Date in New York local time.
+        tests: [not_null]
+      - name: trips
+        description: Number of trips in this zone-hour.
+        tests: [not_null]
+      - name: revenue
+        description: Sum of total_amount for trips in this zone-hour.
+        tests: [not_null]
