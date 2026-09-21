@@ -17,7 +17,7 @@ shift every record by 4–5 hours if joined naively.
 conda create -n nyc-taxi python=3.11 -y && conda activate nyc-taxi
 pip install -r requirements.txt
 cd dbt && dbt deps && cd ..
-make all
+make all  # ingest -> load -> dbt build -> tests -> charts   (~5 min cold)
 ```
 
 No cloud account required.
